@@ -13,12 +13,15 @@ export class UserService {
     public getUsers(): Observable<User[]> {
         return this.http.get<User[]>(`${this.apiServerUrl}/users`);
     }
+
+    public getUserById(userID: Number): Observable<User> {
+        return this.http.get<User>(`${this.apiServerUrl}/users/${userID}`);
+    }
+
     public addUser(user: User): Observable<User> {
-        return this.http.post<User>(`${this.apiServerUrl}/users`,user);
+        return this.http.post<User>(`${this.apiServerUrl}/users/`,user);
     }
-    public updateUser(user: User): Observable<User> {
-        return this.http.put<User>(`${this.apiServerUrl}/users`,user);
-    }
+    
     public deleteUser(userID: number): Observable<void> {
         return this.http.delete<void>(`${this.apiServerUrl}/users/${userID}`);
     }

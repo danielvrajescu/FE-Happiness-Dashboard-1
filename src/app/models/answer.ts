@@ -4,5 +4,6 @@ export interface Answer{
     id: number;
     content: string;
     rating: number;
-    poll: Poll;
+    pollId: number;
+    userId: number;
 }

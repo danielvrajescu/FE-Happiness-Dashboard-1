@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, switchMap } from 'rxjs';
 import { Poll } from '../models/poll';
 import { PollService } from '../services/poll-service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-polls',
@@ -10,27 +13,20 @@ import { PollService } from '../services/poll-service';
   styleUrls: ['./polls.component.scss']
 })
 export class PollsComponent implements OnInit {
+  public poll: Poll | undefined;
+  public polls$: Observable<Poll[]>;
   public polls: Poll[];
   public editPoll: Poll;
   public deletePoll: Poll;
+  public selectedId : number;
 
-  constructor(private pollService: PollService) {};
+  constructor(private pollService: PollService,private router: Router,
+    private route: ActivatedRoute) {};
 
 
   ngOnInit(): void {
-    this.getPolls();
-  }
-
-  public getPolls(): void {
-    this.pollService.getPolls().subscribe(
-      (response: Poll[]) => {
-        this.polls = response;
-        console.log(this.polls);
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    );
+    this.polls$ = this.pollService.getPolls();
+  
   }
 
   public onAddPoll(addForm: NgForm): void {
@@ -38,11 +34,7 @@ export class PollsComponent implements OnInit {
     this.pollService.addPoll(addForm.value).subscribe(
       (response: Poll) => {
         console.log(response);
-        this.getPolls();
-        addForm.reset();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.reloadCurrentRoute();
         addForm.reset();
       }
     );
@@ -52,10 +44,7 @@ export class PollsComponent implements OnInit {
     this.pollService.updatePoll(poll).subscribe(
       (response: Poll) => {
         console.log(response);
-        this.getPolls();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.reloadCurrentRoute();
       }
     );
   }
@@ -64,10 +53,7 @@ export class PollsComponent implements OnInit {
     this.pollService.deletePoll(pollId).subscribe(
       (response: void) => {
         console.log(response);
-        this.getPolls();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message);
+        this.reloadCurrentRoute();
       }
     );
   }
@@ -83,7 +69,7 @@ export class PollsComponent implements OnInit {
     }
     this.polls = results;
     if (results.length === 0 || !key) {
-      this.getPolls();
+      this.reloadCurrentRoute();
     }
   }
 
@@ -107,4 +93,16 @@ export class PollsComponent implements OnInit {
     container?.appendChild(button);
     button.click();
   }
+
+  public gotoItems(poll: Poll) {
+    this.router.navigate(['/polls', poll.id]);
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
+}
+
 }

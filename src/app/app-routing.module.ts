@@ -8,13 +8,9 @@ import { PollsComponent } from './polls/polls.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'polls', 
-    component: PollsComponent,
-    children: [
-      {path: ':id', component: PollDetailsComponent}
-    ] 
+  { path: 'polls', component: PollsComponent},
+  { path: 'polls/:id', component: PollDetailsComponent},
 
-  },
   { path: '**', component: ErrorComponent },
 ];
 

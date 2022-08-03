@@ -11,14 +11,14 @@
        </ul>
        <form class="form-inline my-2 my-lg-0">
           <input type="search" (ngModelChange)="searchPolls(key.value)" #key="ngModel" ngModel
-           name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
+           name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search polls..." required>
        </form>
     </div>
   </nav>
  
-  <div class="container" id="main-container">
+  <div class="container" id="main-container" *ngIf="polls$ | async as list">
    <div class="row">
-     <div *ngFor="let poll of polls" class="col-md-6 col-xl-3">
+     <div *ngFor="let poll of list" class="col-md-6 col-xl-3">
         <div class="card m-b-30">
            <div class="card-body row">
               <div class="col-6 card-title align-self-center mb-0">
@@ -27,7 +27,7 @@
            </div>
            <div class="card-body">
               <div class="float-right btn-group btn-group-sm">
-                 <a (click)="onOpenModal(poll, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                 <a (click)="gotoItems(poll)"  class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
                  <a (click)="onOpenModal(poll, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
               </div>
            </div>
@@ -82,5 +82,6 @@
     </div>
   </div>
   
- 
+  <router-outlet></router-outlet>
+
 

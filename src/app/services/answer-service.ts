@@ -10,15 +10,18 @@ export class AnswerService {
 
     constructor(private http: HttpClient) { }
 
-    public getAnswers(): Observable<Answer[]> {
-        return this.http.get<Answer[]>(`${this.apiServerUrl}/answers`);
+    public getAnswersByPollId(pollId: Number): Observable<Answer[]> {
+        return this.http.get<Answer[]>(`${this.apiServerUrl}/answers/poll/${pollId}`);
     }
+
+    public getAnswersByUserId(userId: Number): Observable<Answer[]> {
+        return this.http.get<Answer[]>(`${this.apiServerUrl}/answers/user/${userId}`);
+    }
+
     public addAnswer(answer: Answer): Observable<Answer> {
         return this.http.post<Answer>(`${this.apiServerUrl}/answers`,answer);
     }
-    public updateAnswer(answer: Answer): Observable<Answer> {
-        return this.http.put<Answer>(`${this.apiServerUrl}/answers`,answer);
-    }
+    
     public deleteAnswer(answerID: number): Observable<void> {
         return this.http.delete<void>(`${this.apiServerUrl}/answers/${answerID}`);
     }

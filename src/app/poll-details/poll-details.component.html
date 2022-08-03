@@ -1,1 +1,91 @@
-<p>poll-details works!</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" style="color:white;"> Poll {{pollId}} answers </a>
+    <button class="navbar-toggler" type="button"  data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor02">
+       <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+             <a style="display:inline" class="nav-link" (click)="onOpenModal(null!, 'add')">Add Answer <span class="sr-only">(current)</span></a>
+             <a style="display:inline" class="nav-link" (click)="goToPage('polls')"> Return to polls <span class="sr-only">(current)</span></a>
+          </li>
+       </ul>
+       
+    </div>
+  </nav>
+ 
+  <div class="container" id="main-container" *ngIf="answers$ | async as list">
+   <div class="row">
+     <div *ngFor="let answer of list" class="col-md-6 col-xl-3">
+        <div class="card m-b-30">
+           <div class="card-body row">
+              <div class="col-6 card-title align-self-center mb-0">
+                 <h5>{{answer?.content}}</h5>
+              </div>
+              <div class="container">
+                <span id="rateMe3"  class="rating-faces"></span>
+              </div>
+<!-- rating.js file -->
+              <script src="js/addons/rating.js"></script>
+              </div>
+           <div class="card-body">
+              <div class="float-right btn-group btn-group-sm">
+                 <a (click)="onOpenModal(answer, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+              </div>
+           </div>
+        </div>
+     </div>
+   </div>
+ 
+   <!-- Add Poll Modal -->
+ <div class="modal fade" id="addAnswerModal" tabindex="-1" role="dialog" aria-labelledby="addAnswerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addAnswerModalLabel">Add Answer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form #addForm="ngForm" (ngSubmit)="onAddAnswer(addForm)">
+            <div class="form-group">
+               <label for="name"> Content </label>
+               <input type="text" ngModel name="content" class="form-control" id="content" placeholder="content.." required>
+               <label for="name"> Rating </label>
+               <input type="text" ngModel name="rating" class="form-control" id="rating" placeholder="rate.." required>
+            </div>
+            <div class="modal-footer">
+               <button type="button" id="add-answer-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+            </div>
+            </form>
+         </div>
+      </div>
+    </div>
+    </div>
+ 
+        <!-- Delete Modal -->
+ <div class="modal fade" id="deleteAnswerModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="deleteModelLabel">Delete Answer</h5>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete answer {{deleteAnswer?.content}}?</p>
+             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button (click)="onDeleteAnswer(deleteAnswer.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+             </div>
+          </div>
+       </div>
+    </div>
+  </div>
+  
+  <router-outlet></router-outlet>
+
+
